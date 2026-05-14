@@ -1,0 +1,148 @@
+Create a modern cinematic streaming website called “Streamify”.
+
+The website should feel like a mix between Apple TV+, Netflix, and a futuristic movie platform. The design must feel premium, immersive, smooth, elegant, and cinematic. Focus entirely on making the website visually impressive and feature rich first. Do NOT focus on optimization, performance tuning, or lightweight rendering yet.
+
+STYLE:
+- Dark modern UI
+- Glassmorphism panels
+- Smooth gradients
+- Large cinematic posters
+- Apple-style spacing and typography
+- Soft shadows and glow effects
+- Smooth transitions and hover animations
+- Elegant blur effects
+- Rounded corners
+- Minimal but premium look
+- Dynamic colors based on featured content
+- Extremely polished and modern
+
+HOMEPAGE:
+Create a scroll-based cinematic homepage.
+
+SECTION 1:
+- Fullscreen hero section
+- Large movie/show background
+- Animated gradient overlays
+- Play button
+- More info button
+- Smooth scroll transition
+- Background slowly moves while scrolling
+- Navbar becomes more blurred while scrolling
+- Cinematic title animations
+
+SECTION 2:
+- “Continue Watching” horizontal row
+- Large interactive movie cards
+- Progress bars
+- Hover animations
+
+SECTION 3:
+- Trending Now section
+- Horizontal scrolling carousel
+- Smooth poster hover effects
+- Rating badges
+- Quality badges like HD, 4K
+
+SECTION 4:
+- Hidden Gems section
+- AI recommended movies
+- Unique layouts
+- Dynamic hover animations
+
+SECTION 5:
+- Stats / Wrapped section
+Show:
+- Hours watched
+- Favorite genre
+- Watch streak
+- Top actors
+- Movie personality
+- Animated stat counters
+- Beautiful charts/cards
+
+SECTION 6:
+- Offline / Downloads section
+- Saved movies
+- Cached content
+- Download badges
+- Smooth UI cards
+
+NAVIGATION:
+- Sticky floating navbar
+- Blur background
+- Animated search button
+- Profile icon
+- Mobile menu
+- Smooth transitions
+- Sidebar for mobile
+
+MOVIE CARDS:
+- Large posters
+- Hover zoom effects
+- Animated glow
+- Rating display
+- Genre tags
+- Quality selector
+- Optional autoplay preview trailer on hover
+
+VIDEO PLAYER UI:
+- Cinematic custom player
+- Play/pause animations
+- Volume slider
+- Timeline preview
+- Subtitle button
+- Audio language selector
+- Quality selector:
+  - Auto
+  - Data Saver
+  - HD
+  - Ultra
+- Theater mode
+- Fullscreen animations
+
+AI FEATURES:
+- AI movie recommendations
+- Mood-based recommendations
+- “What should I watch?” assistant
+- Spoiler-free summaries
+- Smart categories
+
+ANIMATIONS:
+- Smooth page transitions
+- Scroll-based animations
+- Fade effects
+- Floating effects
+- Cinematic loading screens
+- Skeleton loaders
+- Soft hover interactions
+- Smooth opening transitions
+
+MOBILE DESIGN:
+- Fully responsive
+- Mobile-first layout
+- Swipeable movie rows
+- Touch-friendly controls
+- iPad friendly layout
+- Smooth mobile animations
+
+EXTRA DETAILS:
+- Dynamic homepage backgrounds
+- Cinematic dark mode
+- Beautiful loading states
+- Real streaming platform feel
+- Elegant typography
+- Premium UI polish everywhere
+- Modern futuristic streaming aesthetic
+
+TECH:
+- Use Next.js
+- Use Tailwind CSS
+- Use Framer Motion
+- Build reusable components
+- Use clean component structure
+- Focus heavily on visuals and user experience
+
+IMPORTANT:
+Do NOT simplify the UI.
+Do NOT make it minimal/basic.
+Make it feel like a real premium streaming service with cinematic modern visuals and smooth interactions everywhere.

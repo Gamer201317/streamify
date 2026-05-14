@@ -1,0 +1,111 @@
+Add a new feature as a separate TAB inside the existing UPLOAD page in Streamifu called:
+
+TAB NAME:
+“Watch Finder”
+
+---
+
+CORE PURPOSE:
+This tab lets users search any movie or series and instantly see where it is available to watch (Netflix, HBO Max, Apple TV+, Disney+, Mubi, etc.), then open it directly in the correct streaming platform with one click.
+
+Use [JustWatch Netherlands](https://www.justwatch.com/nl?utm_source=chatgpt.com) as the reference source for streaming availability data.
+
+IMPORTANT:
+Do NOT scrape JustWatch directly. Use an API, licensed dataset, or structured availability source that provides the same type of “where to watch” data.
+
+---
+
+UI STRUCTURE (INSIDE UPLOAD PAGE)
+
+UPLOAD PAGE contains 2 tabs:
+1. “Upload Content”
+2. “Watch Finder” ← NEW TAB
+
+---
+
+TAB 2: WATCH FINDER (CORE FEATURE)
+
+1. SEARCH BAR
+- User can type any movie or series title
+- Instant autocomplete suggestions
+- Fast results (no lag, no page reload)
+
+2. RESULTS GRID
+Each result card must show:
+- Poster image
+- Title
+- Year
+- Available streaming platforms (badges/icons)
+
+3. STREAMING AVAILABILITY SYSTEM
+For each title, fetch:
+- Netflix availability
+- HBO Max availability
+- Apple TV+ availability
+- Disney+
+- Mubi
+- Other regional streaming services (Netherlands-focused first)
+
+Store and display all available platforms clearly per title.
+
+4. ONE-CLICK WATCH BUTTONS (KEY FEATURE)
+Each available platform must have a direct button:
+
+Examples:
+- “Watch on Netflix”
+- “Watch on HBO Max”
+- “Watch on Apple TV+”
+
+Each button must deep-link directly to the correct content page on that platform.
+
+If multiple platforms exist:
+- Prioritize best quality / most popular platform first
+- Show secondary options below
+
+5. ADD TO STREAMIFU OPTION
+Each result must also include:
+- “Add to library” button
+
+When clicked:
+- Save movie/show into Streamifu catalog
+- Attach metadata:
+  - title
+  - description
+  - poster
+  - genres
+  - streaming availability
+  - watch links per platform
+
+---
+
+6. DATA REFRESH SYSTEM
+- Keep streaming availability up to date
+- Automatically refresh outdated platform data
+- Remove broken or unavailable links
+- Ensure regional accuracy (Netherlands-first)
+
+---
+
+UX REQUIREMENTS:
+- Extremely fast search experience
+- Clean card-based layout
+- Mobile-first responsive design
+- Minimal clicks to reach “Watch”
+- Smooth hover + transition animations
+- No clutter, no unnecessary UI elements
+
+---
+
+GOAL:
+Inside the Upload page, the user should have two flows:
+1. Upload their own content
+2. Search any movie/series and instantly know where to watch it + open it directly
+
+This turns Streamifu into a hybrid system:
+- personal media library
+- universal streaming search engine
+
+The experience should feel like:
+“Google for movies + Netflix-level UI + instant watch access”
+
+No friction. No hunting. Just search → click → watch.

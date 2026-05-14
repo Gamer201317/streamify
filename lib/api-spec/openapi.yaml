@@ -1,0 +1,414 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: Streamify API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: videos
+    description: Video operations
+  - name: favorites
+    description: Favorites operations
+  - name: watch-history
+    description: Watch history operations
+  - name: storage
+    description: Object storage operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /videos:
+    get:
+      operationId: listVideos
+      tags: [videos]
+      summary: List all videos for authenticated user
+      responses:
+        "200":
+          description: List of videos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Video"
+        "401":
+          description: Unauthorized
+    post:
+      operationId: createVideo
+      tags: [videos]
+      summary: Create a video entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VideoInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Video"
+        "401":
+          description: Unauthorized
+
+  /videos/{id}:
+    get:
+      operationId: getVideo
+      tags: [videos]
+      summary: Get a video by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Video
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Video"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateVideo
+      tags: [videos]
+      summary: Update a video
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VideoUpdate"
+      responses:
+        "200":
+          description: Updated video
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Video"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteVideo
+      tags: [videos]
+      summary: Delete a video
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not found
+
+  /favorites:
+    get:
+      operationId: listFavorites
+      tags: [favorites]
+      summary: List favorite video IDs for authenticated user
+      responses:
+        "200":
+          description: Favorite video IDs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        "401":
+          description: Unauthorized
+
+  /favorites/{videoId}:
+    post:
+      operationId: addFavorite
+      tags: [favorites]
+      summary: Add a video to favorites
+      parameters:
+        - name: videoId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "401":
+          description: Unauthorized
+    delete:
+      operationId: removeFavorite
+      tags: [favorites]
+      summary: Remove a video from favorites
+      parameters:
+        - name: videoId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Removed
+        "401":
+          description: Unauthorized
+
+  /watch-history:
+    get:
+      operationId: listWatchHistory
+      tags: [watch-history]
+      summary: Get watch history for authenticated user
+      responses:
+        "200":
+          description: Watch history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WatchHistoryEntry"
+        "401":
+          description: Unauthorized
+
+  /storage/uploads/request-url:
+    post:
+      operationId: requestUploadUrl
+      tags: [storage]
+      summary: Request a presigned upload URL for file storage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UploadUrlRequest"
+      responses:
+        "200":
+          description: Presigned upload URL and object path
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadUrlResult"
+        "400":
+          description: Invalid request
+        "500":
+          description: Storage error
+
+  /watch-history/{videoId}:
+    put:
+      operationId: upsertWatchHistory
+      tags: [watch-history]
+      summary: Upsert watch progress for a video
+      parameters:
+        - name: videoId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WatchHistoryInput"
+      responses:
+        "200":
+          description: Updated watch history entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WatchHistoryEntry"
+        "401":
+          description: Unauthorized
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+      required:
+        - success
+
+    Video:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+        genre:
+          type: ["string", "null"]
+        year:
+          type: ["integer", "null"]
+        rating:
+          type: ["number", "null"]
+        seasons:
+          type: ["integer", "null"]
+        episodes:
+          type: ["integer", "null"]
+        description:
+          type: ["string", "null"]
+        tags:
+          type: ["array", "null"]
+          items:
+            type: string
+        fileSize:
+          type: ["string", "null"]
+        videoUrl:
+          type: ["string", "null"]
+        status:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - userId
+        - title
+        - type
+        - status
+        - createdAt
+
+    VideoInput:
+      type: object
+      properties:
+        title:
+          type: string
+        type:
+          type: string
+        genre:
+          type: ["string", "null"]
+        year:
+          type: ["integer", "null"]
+        rating:
+          type: ["number", "null"]
+        seasons:
+          type: ["integer", "null"]
+        episodes:
+          type: ["integer", "null"]
+        description:
+          type: ["string", "null"]
+        tags:
+          type: ["array", "null"]
+          items:
+            type: string
+        fileSize:
+          type: ["string", "null"]
+        videoUrl:
+          type: ["string", "null"]
+        status:
+          type: string
+      required:
+        - title
+        - type
+        - status
+
+    VideoUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        status:
+          type: string
+        genre:
+          type: ["string", "null"]
+        year:
+          type: ["integer", "null"]
+        rating:
+          type: ["number", "null"]
+
+    WatchHistoryEntry:
+      type: object
+      properties:
+        videoId:
+          type: string
+        progress:
+          type: number
+        lastWatchedAt:
+          type: string
+      required:
+        - videoId
+        - progress
+        - lastWatchedAt
+
+    UploadUrlRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        size:
+          type: integer
+        contentType:
+          type: string
+      required:
+        - name
+        - size
+        - contentType
+
+    UploadUrlResult:
+      type: object
+      properties:
+        uploadURL:
+          type: string
+        objectPath:
+          type: string
+      required:
+        - uploadURL
+        - objectPath
+
+    WatchHistoryInput:
+      type: object
+      properties:
+        progress:
+          type: number
+        lastWatchedAt:
+          type: string
+      required:
+        - progress
+        - lastWatchedAt

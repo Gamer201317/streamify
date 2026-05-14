@@ -1,0 +1,127 @@
+Build a premium streaming discovery web app called “Streamifu”.
+
+CORE IDEA:
+Streamifu is a universal streaming search and discovery platform that lets users find any movie or show once and instantly see where to watch it across all major streaming services (Netflix, HBO, Apple TV+, Mubi, etc.). It removes the need to manually search across platforms and deep-links users directly into the correct app or service.
+
+Use [JustWatch](https://www.justwatch.com/?utm_source=chatgpt.com) as the reference system for streaming availability data.
+
+---
+
+PART 1 — HOMEPAGE (LANDING EXPERIENCE)
+
+The homepage must feel cinematic, premium, and modern. Think Netflix meets Apple design quality with startup-level polish.
+
+STYLE:
+- Dark mode first
+- Cinematic gradients and lighting
+- Bold typography with strong hierarchy
+- Smooth micro-interactions
+- Minimal but high-impact UI
+- No generic SaaS template look
+
+STRUCTURE:
+
+1. HERO SECTION
+- Massive headline explaining value instantly:
+  Example direction: “Stop scrolling. Start watching.”
+- Subtitle explaining:
+  “Find anything to watch across all streaming platforms in seconds.”
+- Primary CTA: “Start searching”
+- Secondary CTA: “Explore trending”
+- Animated background with floating movie/show cards
+
+2. LIVE DISCOVERY PREVIEW
+- Fake but realistic search interface
+- Shows movies being searched and instantly matched
+- Displays streaming platforms and availability
+- Smooth animated UI transitions
+
+3. WHY STREAMIFU
+Show benefits:
+- One search across all platforms
+- No more switching apps
+- Faster discovery
+- Personalized recommendations
+- Less decision fatigue
+
+Use cinematic UI sections, not boring feature cards.
+
+4. SOCIAL PROOF
+- Trending movies list
+- “Recently added” catalog activity
+- User-like stats (watchlists, searches, etc.)
+
+5. MOBILE PREVIEW
+- Phone mockups with swipeable movie cards
+- Clean, fast UI experience
+
+6. FINAL CTA
+- Emotional closing section
+- Strong button: “Start watching smarter”
+
+---
+
+PART 2 — UPLOAD / ADD CONTENT PAGE (CORE FUNCTIONALITY)
+
+Create a powerful “Add to Streamifu” system.
+
+FEATURE NAME:
+“Universal Catalog Upload & Smart Watch Links”
+
+FUNCTIONALITY:
+
+1. SEARCH + ADD SYSTEM
+- Users can search any movie or show
+- Show results with poster, title, year
+- Button: “Add to Streamifu library”
+
+2. MANUAL UPLOAD OPTION
+- Users can upload their own content
+- Include metadata fields:
+  - title
+  - description
+  - thumbnail
+  - tags
+
+3. SMART STREAMING INTEGRATION (IMPORTANT)
+When a movie/show is added:
+- Fetch real-time streaming availability using JustWatch data
+- Store all available platforms
+- Generate deep links that open directly in:
+  - Netflix
+  - HBO Max
+  - Apple TV+
+  - Mubi
+  - and other available services
+
+4. UNIFIED CATALOG SYSTEM
+- Everything (uploaded or searched) goes into one library
+- Each item includes:
+  - poster
+  - description
+  - genre
+  - “Where to watch” section
+  - platform buttons
+
+5. UX REQUIREMENTS
+- Instant search results
+- One-click add system
+- Clean and fast UI
+- Mobile-friendly layout
+- No lag, no clutter
+
+6. STREAMING INTELLIGENCE LAYER
+- Periodically update availability data
+- Always show current platforms
+- Remove outdated sources automatically
+- Keep deep links accurate
+
+---
+
+GOAL:
+Build a seamless system where users never need to manually search streaming platforms again. Streamifu becomes the single entry point for discovering and watching content across all services.
+
+The homepage sells the idea.  
+The upload page makes it real.
+
+Everything should feel like a premium, modern, cinematic product that could realistically compete with top-tier streaming discovery apps.

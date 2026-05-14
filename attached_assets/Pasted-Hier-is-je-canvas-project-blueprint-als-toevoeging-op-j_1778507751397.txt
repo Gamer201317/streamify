@@ -1,0 +1,214 @@
+Hier is je **canvas (project blueprint)** als toevoeging op je bestaande site:
+[https://streamify-lac-kappa.vercel.app](https://streamify-lac-kappa.vercel.app)
+
+Ik heb het zo opgezet dat je het direct kunt gebruiken in Replit of als roadmap in je repo.
+
+---
+
+# 🧩 STREAMIFY – CANVAS UPGRADE (Streamifu Expansion)
+
+## 🎯 Doel
+
+Transformeer Streamify van een simpele streaming-UI naar een **premium AI-powered cinematic discovery platform** met Apple-style polish.
+
+Geen hosting van video’s. Alleen discovery + links + experience.
+
+---
+
+# 🏗️ 1. HOME EXPERIENCE (Upgrade)
+
+## 🔥 Hero Section
+
+* Dynamische featured movie banner
+* Background blur gebaseerd op poster
+* Auto-rotating spotlight films (elke 8–12 sec)
+
+## 🎬 Sections
+
+* Trending now
+* Popular
+* Top rated
+* “Because you watched…”
+* “Hidden gems”
+
+## 🌀 UI details
+
+* Smooth horizontal carousels
+* Lazy loading cards
+* Skeleton loading states
+* Hover previews (poster zoom + info reveal)
+
+---
+
+# 🧠 2. AI SEARCH LAYER
+
+## ✨ Feature
+
+Zoekbalk die geen domme keyword machine is maar “begrijpt wat je bedoelt”.
+
+### Voorbeelden:
+
+* “enge film maar niet te stressvol”
+* “films zoals Inception maar makkelijker”
+* “iets grappigs voor 2 uur ’s nachts”
+
+## ⚙️ Logica
+
+* TMDB search fallback
+* tag-based filtering
+* AI-style mapping (mock allowed)
+
+---
+
+# 🎥 3. MOVIE DETAIL PAGE (APPLE STYLE)
+
+## Layout
+
+* Fullscreen poster background
+* Glassmorphism info panel
+
+## Content
+
+* Title + rating + runtime
+* Genres as pills
+* Cast grid
+* Trailer embed
+* “Watch options” (external links)
+* Similar movies carousel
+
+## ✨ Motion
+
+* fade-in transitions
+* parallax scroll effect
+* smooth section reveal
+
+---
+
+# ❤️ 4. WATCHLIST + LIKES
+
+## Features
+
+* like button per movie
+* save to watchlist (localStorage)
+* “continue watching” row
+* basic user history
+
+## UI
+
+* heart animations
+* subtle feedback (no boring static clicks, dat is voor banken)
+
+---
+
+# 👀 5. WATCH PARTY (LIGHT VERSION)
+
+Geen backend nodig, alleen UI + mock sync.
+
+## Features
+
+* room code system (fake realtime)
+* synced play button state (simulated)
+* chat UI panel
+* host controls UI
+
+## Feel
+
+Moet lijken alsof het werkt, zelfs als het vooral “doet alsof”.
+
+---
+
+# 🤖 6. AI RECOMMENDATION SYSTEM
+
+## Sections
+
+* “Because you liked…”
+* “Your vibe today”
+* “People like you watched”
+
+## Logic (simpel houden)
+
+* genre overlap
+* tags matching
+* popularity blending
+
+---
+
+# 🍎 7. APPLE-STYLE DESIGN SYSTEM
+
+## Visual rules
+
+* glassmorphism everywhere (blur + transparency)
+* soft shadows (no harsh borders)
+* consistent rounded corners
+* dark mode default
+* subtle gradients
+
+## Typography
+
+* large headings
+* minimal text clutter
+* spacing > decoration
+
+## Motion
+
+* Framer Motion transitions
+* hover scale (very subtle)
+* page fade transitions
+* smooth carousel scroll
+
+---
+
+# ⚡ 8. PERFORMANCE & UX
+
+* lazy loading images
+* skeleton loaders
+* prefetch on hover
+* instant UI response
+* minimal re-renders
+
+---
+
+# 🎨 9. CINEMATIC POLISH FEATURES
+
+## Must-have “wow” effects:
+
+* hover trailer preview (muted autoplay)
+* dynamic background gradient from poster
+* time-based UI mood:
+
+  * morning = lighter tones
+  * night = darker cinematic tone
+* ambient motion gradients
+
+---
+
+# 🚫 10. NOT INCLUDED (important)
+
+* video hosting
+* downloads
+* complex backend auth
+* multi-platform apps
+* plugin system
+* heavy architecture overkill
+
+---
+
+# 🧠 FINAL VISION
+
+De app moet voelen als:
+
+> Netflix + Apple TV + AI movie assistant + cinematic UI lab
+
+Niet een “projectje”. Meer iets dat per ongeluk professioneel lijkt terwijl het eigenlijk gewoon slim geplakte frontend magie is.
+
+---
+
+Als je dit goed implementeert, verandert je site van:
+
+> “leuke streaming UI”
+
+naar:
+
+> “ok wie heeft dit gebouwd en waarom ziet dit er beter uit dan de helft van de echte apps”
+
+En dat is meestal het punt waarop je jezelf afvraagt of je nog wel een normale hobby hebt.
