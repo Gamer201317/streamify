@@ -21,109 +21,51 @@ interface WatchHistoryEntry {
   last_watched_at: string;
 }
 
-interface ApiVideo {
-  id: string;
-  title: string;
-  type: string;
-  genre: string | null;
-  year: number | null;
-  rating: number | null;
-  seasons: number | null;
-  episodes: number | null;
-  description: string | null;
-  tags: string[] | null;
-  fileSize: string | null;
-  videoUrl: string | null;
-  posterUrl: string | null;
-  tmdbId: number | null;
-  status: string;
-  createdAt: string;
+// Demo mode: use localStorage for persistence
+function loadFromStorage<T>(key: string, defaultValue: T): T {
+  try {
+    const stored = localStorage.getItem(key);
+    if (stored) return JSON.parse(stored);
+  } catch {}
+  return defaultValue;
 }
 
-interface ApiWatchHistoryEntry {
-  videoId: string;
-  progress: number;
-  lastWatchedAt: string;
-}
-
-async function apiFetch(path: string, options?: RequestInit) {
-  const res = await fetch(`/api${path}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...(options?.headers ?? {}),
-    },
-    credentials: "include",
-  });
-  if (!res.ok && res.status !== 204) {
-    throw new Error(`API error ${res.status}`);
-  }
-  if (res.status === 204) return null;
-  return res.json();
+function saveToStorage<T>(key: string, value: T): void {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {}
 }
 
 const Index = () => {
   const [view, setView] = useState<View>("home");
-  const [userVideos, setUserVideos] = useState<VideoItem[]>([]);
+  const [userVideos, setUserVideos] = useState<VideoItem[]>(() => 
+    loadFromStorage<VideoItem[]>("streamify-user-videos", [])
+  );
   const [playingItem, setPlayingItem] = useState<VideoItem | null>(null);
   const [detailItem, setDetailItem] = useState<VideoItem | null>(null);
-  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [favorites, setFavorites] = useState<Set<string>>(() => 
+    new Set(loadFromStorage<string[]>("streamify-favorites", []))
+  );
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
-  const [watchHistory, setWatchHistory] = useState<Map<string, WatchHistoryEntry>>(new Map());
+  const [watchHistory, setWatchHistory] = useState<Map<string, WatchHistoryEntry>>(() => {
+    const stored = loadFromStorage<Record<string, WatchHistoryEntry>>("streamify-watch-history", {});
+    return new Map(Object.entries(stored));
+  });
   const { rainbowMode } = useEasterEggs();
   const { user, loading, signOut } = useAuth();
 
+  // Persist to localStorage when data changes
   useEffect(() => {
-    if (!user) return;
-    apiFetch("/videos")
-      .then((data: ApiVideo[]) => {
-        if (data) {
-          setUserVideos(
-            data.map((v) => ({
-              id: v.id,
-              title: v.title,
-              type: v.type as "Movie" | "Series",
-              genre: v.genre || "",
-              year: v.year || new Date().getFullYear(),
-              rating: v.rating ?? null,
-              seasons: v.seasons ?? undefined,
-              eps: v.episodes ?? undefined,
-              desc: v.description ?? undefined,
-              tags: v.tags ?? [],
-              size: v.fileSize ?? "",
-              date: new Date(v.createdAt).toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric" }),
-              status: v.status as "live" | "processing",
-              videoUrl: v.videoUrl ?? undefined,
-              posterUrl: v.posterUrl ?? undefined,
-              tmdbId: v.tmdbId ?? undefined,
-            }))
-          );
-        }
-      })
-      .catch(() => {});
-  }, [user]);
+    saveToStorage("streamify-user-videos", userVideos);
+  }, [userVideos]);
 
   useEffect(() => {
-    if (!user) return;
-    apiFetch("/favorites")
-      .then((data: string[] | null) => {
-        if (data) setFavorites(new Set(data));
-      })
-      .catch(() => {});
-  }, [user]);
+    saveToStorage("streamify-favorites", Array.from(favorites));
+  }, [favorites]);
 
   useEffect(() => {
-    if (!user) return;
-    apiFetch("/watch-history")
-      .then((data: ApiWatchHistoryEntry[]) => {
-        if (data) {
-          const map = new Map<string, WatchHistoryEntry>();
-          data.forEach((h) => map.set(h.videoId, { video_id: h.videoId, progress: h.progress, last_watched_at: h.lastWatchedAt }));
-          setWatchHistory(map);
-        }
-      })
-      .catch(() => {});
-  }, [user]);
+    saveToStorage("streamify-watch-history", Object.fromEntries(watchHistory));
+  }, [watchHistory]);
 
   const allItems = [...SAMPLE_VIDEOS, ...userVideos];
 
@@ -138,29 +80,27 @@ const Index = () => {
 
   const handleUploaded = useCallback((item: VideoItem) => {
     setUserVideos((prev) => [item, ...prev]);
-    toast.success(`"${item.title}" toegevoegd aan je library! 🎬`);
+    toast.success(`"${item.title}" added to your library!`);
   }, []);
 
   const handleDelete = useCallback((id: string) => {
     setUserVideos((prev) => prev.filter((v) => v.id !== id));
+    toast.success("Video removed from library");
   }, []);
 
-  const handleToggleFavorite = useCallback(async (item: VideoItem) => {
-    if (!user) return;
+  const handleToggleFavorite = useCallback((item: VideoItem) => {
     const isFav = favorites.has(item.id);
     if (isFav) {
       setFavorites((prev) => { const next = new Set(prev); next.delete(item.id); return next; });
-      await apiFetch(`/favorites/${item.id}`, { method: "DELETE" }).catch(() => {});
-      toast("Verwijderd uit favorieten", { icon: "💔" });
+      toast("Removed from favorites", { icon: "💔" });
     } else {
       setFavorites((prev) => new Set(prev).add(item.id));
-      await apiFetch(`/favorites/${item.id}`, { method: "POST" }).catch(() => {});
-      toast("Toegevoegd aan favorieten!", { icon: "❤️" });
+      toast("Added to favorites!", { icon: "❤️" });
     }
-  }, [user, favorites]);
+  }, [favorites]);
 
-  const handleProgressUpdate = useCallback(async (videoId: string, currentTime: number, videoDuration: number) => {
-    if (!user || videoDuration <= 0) return;
+  const handleProgressUpdate = useCallback((videoId: string, currentTime: number, videoDuration: number) => {
+    if (videoDuration <= 0) return;
     const progressPct = (currentTime / videoDuration) * 100;
     const now = new Date().toISOString();
     setWatchHistory((prev) => {
@@ -168,11 +108,7 @@ const Index = () => {
       next.set(videoId, { video_id: videoId, progress: progressPct, last_watched_at: now });
       return next;
     });
-    await apiFetch(`/watch-history/${videoId}`, {
-      method: "PUT",
-      body: JSON.stringify({ progress: progressPct, lastWatchedAt: now }),
-    }).catch(() => {});
-  }, [user]);
+  }, []);
 
   const handlePlay = useCallback((item: VideoItem) => {
     setDetailItem(null);
@@ -188,12 +124,12 @@ const Index = () => {
   }
 
   const genreCounts = userVideos.reduce<Record<string, number>>((acc, item) => {
-    const key = item.genre || "Mysterie";
+    const key = item.genre || "Mystery";
     acc[key] = (acc[key] || 0) + 1;
     return acc;
   }, {});
 
-  const topGenre = Object.entries(genreCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || "Chaotisch goed";
+  const topGenre = Object.entries(genreCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || "Chaotic good";
   const stats = {
     totalTitles: userVideos.length,
     movieCount: userVideos.filter((item) => item.type === "Movie").length,

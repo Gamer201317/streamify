@@ -1,19 +1,27 @@
-import { useUser, useClerk } from "@clerk/react";
+import { useState, useCallback } from "react";
+
+// Demo user for testing without Clerk authentication
+const DEMO_USER = {
+  id: "demo-user-1",
+  email: "demo@streamify.app",
+  user_metadata: {
+    full_name: "Demo User",
+    display_name: "Demo",
+  },
+};
 
 export const useAuth = () => {
-  const { user, isLoaded } = useUser();
-  const { signOut } = useClerk();
+  const [isSignedIn, setIsSignedIn] = useState(true);
+
+  const signOut = useCallback(() => {
+    setIsSignedIn(false);
+    // In demo mode, just reload to show landing page
+    window.location.href = "/";
+  }, []);
 
   return {
-    user: isLoaded && user ? {
-      id: user.id,
-      email: user.primaryEmailAddress?.emailAddress ?? "",
-      user_metadata: {
-        full_name: user.fullName ?? user.username ?? "",
-        display_name: user.username ?? user.firstName ?? "",
-      },
-    } : null,
-    loading: !isLoaded,
-    signOut: () => signOut(),
+    user: isSignedIn ? DEMO_USER : null,
+    loading: false,
+    signOut,
   };
 };

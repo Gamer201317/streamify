@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, Redirect } from "wouter";
+import { Link } from "wouter";
 import {
   motion,
   useReducedMotion,
@@ -23,7 +23,6 @@ import {
   Users,
   Film,
 } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
 import PosterArtwork from "@/components/PosterArtwork";
 import { SAMPLE_VIDEOS, type VideoItem } from "@/lib/types";
 
@@ -146,18 +145,7 @@ const AnimatedTitle = ({
 /* -------------------------------------------------------------------------- */
 
 const Landing = () => {
-  const { user, loading } = useAuth();
   const reduce = useReducedMotion();
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="w-8 h-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  if (user) return <Redirect to="/app" />;
 
   return (
     <div className="min-h-screen bg-background text-foreground antialiased selection:bg-primary/30 selection:text-foreground overflow-x-hidden">
