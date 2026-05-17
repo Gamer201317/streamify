@@ -20,13 +20,46 @@ interface BrowseViewProps {
   watchProgress?: Map<string, number>;
 }
 
-async function apiFetch(path: string, timeoutMs = 10000) {
+// Demo TMDB-like data for offline mode
+const DEMO_MOVIES: TmdbItem[] = [
+  { id: 1, title: "Dune: Part Two", poster: "https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg", year: "2024", rating: 8.5 },
+  { id: 2, title: "Oppenheimer", poster: "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg", year: "2023", rating: 8.9 },
+  { id: 3, title: "Poor Things", poster: "https://image.tmdb.org/t/p/w500/kCGlIMHnOm8JPXq3rXM6c5wMxcT.jpg", year: "2023", rating: 8.1 },
+  { id: 4, title: "The Batman", poster: "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg", year: "2022", rating: 7.8 },
+  { id: 5, title: "Everything Everywhere All at Once", poster: "https://image.tmdb.org/t/p/w500/w3LxiVYdWWRvEVdn5RYq6jIqkb1.jpg", year: "2022", rating: 8.0 },
+  { id: 6, title: "Top Gun: Maverick", poster: "https://image.tmdb.org/t/p/w500/62HCnUTziyWcpDaBO2i1DX17ljH.jpg", year: "2022", rating: 8.3 },
+  { id: 7, title: "Avatar: The Way of Water", poster: "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg", year: "2022", rating: 7.7 },
+  { id: 8, title: "Spider-Man: No Way Home", poster: "https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg", year: "2021", rating: 8.2 },
+  { id: 9, title: "The Holdovers", poster: "https://image.tmdb.org/t/p/w500/VHSzNBTwxV8vh7wylo7O9CLdac.jpg", year: "2023", rating: 8.0 },
+  { id: 10, title: "Killers of the Flower Moon", poster: "https://image.tmdb.org/t/p/w500/dB6Krk806zeqd0YNp2ngQ9zXteH.jpg", year: "2023", rating: 7.6 },
+];
+
+const DEMO_SERIES: TmdbItem[] = [
+  { id: 101, title: "Shogun", poster: "https://image.tmdb.org/t/p/w500/7O4iVfOMQmdCSxhOg1WnzG1AgYT.jpg", year: "2024", rating: 9.3 },
+  { id: 102, title: "The Bear", poster: "https://image.tmdb.org/t/p/w500/sHFlbKS3WLqMnp9t2ghADIJFnuQ.jpg", year: "2022", rating: 9.1 },
+  { id: 103, title: "True Detective", poster: "https://image.tmdb.org/t/p/w500/aowr5fLjSqLb7teJt5gg6XNk0IO.jpg", year: "2024", rating: 8.0 },
+  { id: 104, title: "House of the Dragon", poster: "https://image.tmdb.org/t/p/w500/7QMsOTMUswlwxJP0rTTZfmz2tX2.jpg", year: "2022", rating: 8.4 },
+  { id: 105, title: "The Last of Us", poster: "https://image.tmdb.org/t/p/w500/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg", year: "2023", rating: 8.8 },
+  { id: 106, title: "Fallout", poster: "https://image.tmdb.org/t/p/w500/AnsSKR4SHAIl0EpMnMxpbpyPll.jpg", year: "2024", rating: 8.5 },
+  { id: 107, title: "Severance", poster: "https://image.tmdb.org/t/p/w500/lFf6LLrQjYldcZItzOkGmMMigP7.jpg", year: "2022", rating: 8.7 },
+  { id: 108, title: "Succession", poster: "https://image.tmdb.org/t/p/w500/7HW47XbkNQ5fiwQFYGWdw9gs144.jpg", year: "2023", rating: 8.9 },
+];
+
+async function apiFetch(path: string, timeoutMs = 5000) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
     const res = await fetch(`/api${path}`, { credentials: "include", signal: controller.signal });
     if (!res.ok) throw new Error(`API error ${res.status}`);
     return res.json();
+  } catch {
+    // Return demo data when API is unavailable
+    if (path.includes("trending") && path.includes("movie")) return DEMO_MOVIES;
+    if (path.includes("trending") && path.includes("tv")) return DEMO_SERIES;
+    if (path.includes("popular")) return DEMO_MOVIES.slice(0, 8);
+    if (path.includes("top-rated")) return [...DEMO_MOVIES].sort((a, b) => (b.rating || 0) - (a.rating || 0)).slice(0, 8);
+    if (path.includes("hidden-gems")) return DEMO_SERIES.slice(3, 8);
+    return [];
   } finally {
     clearTimeout(timer);
   }
@@ -295,23 +328,40 @@ const BrowseView = ({ items, onPlay, favorites, onToggleFavorite, onDetail, cont
   const [loadingMore, setLoadingMore] = useState(true);
 
   useEffect(() => {
-    Promise.all([
-      apiFetch("/trending?type=movie"),
-      apiFetch("/trending?type=tv"),
-    ]).then(([movies, series]) => {
-      setTrendingMovies(movies || []);
-      setTrendingSeries(series || []);
-    }).catch(() => {}).finally(() => setLoadingTrending(false));
+    const loadData = async () => {
+      try {
+        const [movies, series] = await Promise.all([
+          apiFetch("/trending?type=movie"),
+          apiFetch("/trending?type=tv"),
+        ]);
+        setTrendingMovies(movies || DEMO_MOVIES);
+        setTrendingSeries(series || DEMO_SERIES);
+      } catch {
+        // Fallback to demo data if anything fails
+        setTrendingMovies(DEMO_MOVIES);
+        setTrendingSeries(DEMO_SERIES);
+      } finally {
+        setLoadingTrending(false);
+      }
 
-    Promise.all([
-      apiFetch("/popular?type=movie"),
-      apiFetch("/top-rated?type=movie"),
-      apiFetch("/hidden-gems"),
-    ]).then(([popular, rated, gems]) => {
-      setPopularMovies(popular || []);
-      setTopRated(rated || []);
-      setHiddenGems(gems || []);
-    }).catch(() => {}).finally(() => setLoadingMore(false));
+      try {
+        const [popular, rated, gems] = await Promise.all([
+          apiFetch("/popular?type=movie"),
+          apiFetch("/top-rated?type=movie"),
+          apiFetch("/hidden-gems"),
+        ]);
+        setPopularMovies(popular || DEMO_MOVIES.slice(0, 8));
+        setTopRated(rated || [...DEMO_MOVIES].sort((a, b) => (b.rating || 0) - (a.rating || 0)).slice(0, 8));
+        setHiddenGems(gems || DEMO_SERIES.slice(3, 8));
+      } catch {
+        setPopularMovies(DEMO_MOVIES.slice(0, 8));
+        setTopRated([...DEMO_MOVIES].sort((a, b) => (b.rating || 0) - (a.rating || 0)).slice(0, 8));
+        setHiddenGems(DEMO_SERIES.slice(3, 8));
+      } finally {
+        setLoadingMore(false);
+      }
+    };
+    loadData();
   }, []);
 
   const featuredItem = useMemo(() => {
